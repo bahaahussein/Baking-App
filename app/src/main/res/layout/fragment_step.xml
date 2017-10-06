@@ -1,0 +1,60 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@android:color/background_light"
+    tools:context="com.example.android.bakingapp.StepFragment">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+            android:id="@+id/playerView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"/>
+        <ProgressBar
+            android:id="@+id/pb_exoplayer"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:visibility="gone"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:indeterminateTintMode="src_atop"
+            android:indeterminateTint="@color/colorAccent"
+            />
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/tv_step_instructions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:textSize="15sp"
+        android:fontFamily="sans-serif-medium"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp">
+        <ImageView
+            android:id="@+id/previous_step"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_back"
+            android:visibility="invisible"
+            android:onClick="previousStep"/>
+        <ImageView
+            android:id="@+id/next_step"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_forward"
+            android:visibility="invisible"
+            android:onClick="nextStep"/>
+    </LinearLayout>
+
+</LinearLayout>
