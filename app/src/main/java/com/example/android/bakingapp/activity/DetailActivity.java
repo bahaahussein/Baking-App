@@ -1,23 +1,32 @@
-package com.example.android.bakingapp;
+package com.example.android.bakingapp.activity;
 
 
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.graphics.Typeface;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
+
+import com.example.android.bakingapp.widget.BackingWidgetProvider;
+import com.example.android.bakingapp.R;
+import com.example.android.bakingapp.fragment.RecipeDetailsFragment;
+import com.example.android.bakingapp.fragment.StepFragment;
+import com.example.android.bakingapp.adapter.StepsAdapter;
+import com.example.android.bakingapp.model.RecipesItem;
+import com.example.android.bakingapp.model.Step;
 
 import java.util.ArrayList;
 
 public class DetailActivity extends AppCompatActivity
         implements StepsAdapter.StepsItemClickListener {
 
+    private TextView mToolbarTitle;
     private final static String TAG = DetailActivity.class.getSimpleName();
     private static final String STATE_POSITION_KEY = "position-key";
     private static final String STATE_ITEM = "state-item-activity";
@@ -37,6 +46,9 @@ public class DetailActivity extends AppCompatActivity
         setContentView(R.layout.activity_detail);
         StepsAdapter.setListener(this);
         Toolbar toolbar = findViewById(R.id.toolbar_activity_detail);
+        mToolbarTitle = toolbar.findViewById(R.id.toolbar_activity_detail_title);
+        Typeface lobster = Typeface.createFromAsset(getAssets(), "Lobster.ttf");
+        mToolbarTitle.setTypeface(lobster);
         if(savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             mRecipesItem = extras.getParcelable(MainActivity.RECIPES_ITEM_KEY);
@@ -51,6 +63,7 @@ public class DetailActivity extends AppCompatActivity
         }
         setToolbarTitle(toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         // Get a support ActionBar corresponding to this toolbar
         ActionBar ab = getSupportActionBar();
         // Enable the Up button
@@ -90,13 +103,8 @@ public class DetailActivity extends AppCompatActivity
         extras.putInt(STEP_SIZE_KEY, steps.size());
         StepFragment stepFragment = new StepFragment();
         stepFragment.setArguments(extras);
-        if(getResources().getBoolean(R.bool.isTablet)) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.step_fragment_container,
-                    stepFragment, STEP_FRAGMENT_TAG).commit();
-        } else {
-            getSupportFragmentManager().beginTransaction().replace(R.id.step_fragment_container,
-                    stepFragment, STEP_FRAGMENT_TAG).addToBackStack(null).commit();
-        }
+        getSupportFragmentManager().beginTransaction().replace(R.id.step_fragment_container,
+                stepFragment, STEP_FRAGMENT_TAG).commit();
     }
 
     private void updateWidget(RecipesItem recipesItem) {
@@ -117,23 +125,36 @@ public class DetailActivity extends AppCompatActivity
     }
 
     private void setToolbarTitle(Toolbar toolbar) {
+        TextView title = toolbar.findViewById(R.id.toolbar_activity_detail_title);
         if(getResources().getBoolean(R.bool.isTablet)) {
-            toolbar.setTitle(R.string.app_name);
+            title.setText(R.string.app_name);
         } else {
-            toolbar.setTitle(mRecipesItem.getName());
+            title.setText(mRecipesItem.getName());
         }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            FragmentManager fm = getSupportFragmentManager();
-            if (fm.getBackStackEntryCount() > 0) {
-                fm.popBackStack();
-                return true;
-            }
+            onBackPressed();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
-}
 
+    @Override
+    public void onBackPressed() {
+        if(getResources().getBoolean(R.bool.isTablet)) {
+            NavUtils.navigateUpFromSameTask(this);
+        } else {
+            StepFragment stepFragment = (StepFragment)getSupportFragmentManager().findFragmentByTag(STEP_FRAGMENT_TAG);
+            if(stepFragment!=null && stepFragment.isVisible()) {
+                Bundle extras = new Bundle();
+                extras.putParcelable(MainActivity.RECIPES_ITEM_KEY, mRecipesItem);
+                startDetailFragment(extras);
+            } else {
+                NavUtils.navigateUpFromSameTask(this);
+            }
+        }
+    }
+}

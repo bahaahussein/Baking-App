@@ -5,17 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.android.bakingapp.MainActivity">
+    tools:context="com.example.android.bakingapp.activity.MainActivity">
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_activity_main"
-        app:title="@string/toolbar_main_activity"
-        app:titleTextColor="@android:color/background_light"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/toolbar_main_activity"
+            android:textColor="@android:color/background_light"
+            android:id="@+id/toolbar_activity_main_title" />
+    </android.support.v7.widget.Toolbar>
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

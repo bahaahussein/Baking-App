@@ -1,4 +1,4 @@
-package com.example.android.bakingapp;
+package com.example.android.bakingapp.widget;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -8,6 +8,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.RemoteViews;
 
+import com.example.android.bakingapp.R;
+import com.example.android.bakingapp.activity.DetailActivity;
+import com.example.android.bakingapp.activity.MainActivity;
+import com.example.android.bakingapp.model.Ingredient;
+import com.example.android.bakingapp.model.RecipesItem;
+
 import java.util.ArrayList;
 
 /**
@@ -16,7 +22,7 @@ import java.util.ArrayList;
 public class BackingWidgetProvider extends AppWidgetProvider {
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                               RecipesItem recipesItem , int appWidgetId) {
+                                RecipesItem recipesItem , int appWidgetId) {
 
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.backing_widget_provider);

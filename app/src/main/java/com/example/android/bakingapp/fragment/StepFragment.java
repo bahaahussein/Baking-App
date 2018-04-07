@@ -1,4 +1,4 @@
-package com.example.android.bakingapp;
+package com.example.android.bakingapp.fragment;
 
 
 import android.content.res.Configuration;
@@ -11,10 +11,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.android.bakingapp.R;
+import com.example.android.bakingapp.activity.DetailActivity;
+import com.example.android.bakingapp.model.Step;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
@@ -50,6 +54,9 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
     private ImageView mPreviousStep;
     private int mPosition;
     private boolean mIsFullScreen;
+    private FrameLayout mVideoFrameLayout;
+    private static String VIEDO_POSITION_KEY = "video position";
+    private long videoPosition;
 
     public StepFragment() {
         // Required empty public constructor
@@ -57,6 +64,10 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        if(savedInstanceState!=null)
+            videoPosition = savedInstanceState.getLong(VIEDO_POSITION_KEY, -1);
+        else
+            videoPosition=-1;
         mInstructionsView.setText(mStep.getDescription());
         mPosition = getArguments().getInt(DetailActivity.STEP_POSITION_KEY);
         int size = getArguments().getInt(DetailActivity.STEP_SIZE_KEY);
@@ -68,6 +79,9 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
             mNextStep.setVisibility(View.VISIBLE);
         }
         if (mUri == null) {
+            ViewGroup.LayoutParams params = mVideoFrameLayout.getLayoutParams();
+            params.height=0;
+            mVideoFrameLayout.setLayoutParams(params);
             Log.d(TAG, "uri null " + mPosition);
             mPlayerView.setVisibility(View.GONE);
         } else {
@@ -92,6 +106,7 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
         mInstructionsView = view.findViewById(R.id.tv_step_instructions);
         mNextStep = view.findViewById(R.id.next_step);
         mPreviousStep = view.findViewById(R.id.previous_step);
+        mVideoFrameLayout = view.findViewById(R.id.container_playerview);
         if(mIsFullScreen) {
             mInstructionsView.setVisibility(View.GONE);
             mNextStep.setVisibility(View.GONE);
@@ -100,8 +115,15 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
             // Hide the status bar.
             int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
             decorView.setSystemUiVisibility(uiOptions);
-            mPlayerView.getLayoutParams().height= ViewGroup.LayoutParams.MATCH_PARENT;
-
+            view.findViewById(R.id.container_playerview).getLayoutParams().height =
+                    ViewGroup.LayoutParams.MATCH_PARENT;
+            ((AppCompatActivity)getActivity()).getSupportActionBar().hide();
+        } else {
+            ((AppCompatActivity)getActivity()).getSupportActionBar().show();
+            View decorView = getActivity().getWindow().getDecorView();
+            // show the status bar.
+            int uiOptions = View.SYSTEM_UI_FLAG_VISIBLE;
+            decorView.setSystemUiVisibility(uiOptions);
         }
         return view;
     }
@@ -129,7 +151,9 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
             String userAgent = Util.getUserAgent(getContext(), "BakingApp");
             MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(
                     getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
-            mExoPlayer.prepare(mediaSource);
+            mExoPlayer.prepare(mediaSource, false, true);
+            if(videoPosition>-1)
+                mExoPlayer.seekTo(videoPosition);
             mExoPlayer.setPlayWhenReady(true);
             mExoPlayer.addListener(this);
         }
@@ -140,6 +164,14 @@ public class StepFragment extends Fragment implements ExoPlayer.EventListener {
         super.onResume();
         if(mExoPlayer != null) {
             mExoPlayer.setPlayWhenReady(true);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if(mExoPlayer != null) {
+            outState.putLong(VIEDO_POSITION_KEY, mExoPlayer.getCurrentPosition());
         }
     }
 

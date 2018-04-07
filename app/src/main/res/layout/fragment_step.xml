@@ -4,15 +4,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@android:color/background_light"
-    tools:context="com.example.android.bakingapp.StepFragment">
+    tools:context="com.example.android.bakingapp.fragment.StepFragment">
 
     <FrameLayout
+        android:id="@+id/container_playerview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="200dp">
         <com.google.android.exoplayer2.ui.SimpleExoPlayerView
             android:id="@+id/playerView"
             android:layout_width="match_parent"
-            android:layout_height="200dp"/>
+            android:layout_height="match_parent"/>
         <ProgressBar
             android:id="@+id/pb_exoplayer"
             android:layout_width="48dp"
@@ -29,10 +30,10 @@
         android:id="@+id/tv_step_instructions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="8dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
         android:layout_marginTop="8dp"
-        android:textSize="15sp"
-        android:fontFamily="sans-serif-medium"/>
+        android:textSize="15sp"/>
 
     <LinearLayout
         android:layout_width="match_parent"

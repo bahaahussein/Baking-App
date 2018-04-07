@@ -3,13 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.android.bakingapp.DetailActivity"
+    tools:context="com.example.android.bakingapp.activity.DetailActivity"
     android:orientation="horizontal">
 
     <fragment
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/detail_fragment"
-        android:name="com.example.android.bakingapp.RecipeDetailsFragment"
+        android:name="com.example.android.bakingapp.fragment.RecipeDetailsFragment"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="match_parent" />

@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.android.bakingapp.RecipesFragment">
+    tools:context="com.example.android.bakingapp.fragment.RecipesFragment">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_recipes_selection"

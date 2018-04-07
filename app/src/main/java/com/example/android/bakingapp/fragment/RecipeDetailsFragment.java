@@ -1,7 +1,6 @@
-package com.example.android.bakingapp;
+package com.example.android.bakingapp.fragment;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,6 +13,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import com.example.android.bakingapp.R;
+import com.example.android.bakingapp.adapter.StepsAdapter;
+import com.example.android.bakingapp.activity.MainActivity;
+import com.example.android.bakingapp.model.Ingredient;
+import com.example.android.bakingapp.model.RecipesItem;
 
 import java.util.ArrayList;
 
@@ -48,6 +53,11 @@ public class RecipeDetailsFragment extends Fragment {
         mScrollView = view.findViewById(R.id.scrollview_fragment_recipe_details);
         mStepsRecyclerView.setFocusable(false);
         view.findViewById(R.id.linearlayout_fragment_recipe_details).requestFocus();
+        ((AppCompatActivity)getActivity()).getSupportActionBar().show();
+        View decorView = getActivity().getWindow().getDecorView();
+        // show the status bar.
+        int uiOptions = View.SYSTEM_UI_FLAG_VISIBLE;
+        decorView.setSystemUiVisibility(uiOptions);
         return view;
     }
 
@@ -80,6 +90,7 @@ public class RecipeDetailsFragment extends Fragment {
         };
         mStepsRecyclerView.setLayoutManager(layoutManager);
         mStepsRecyclerView.setHasFixedSize(true);
+        Log.d(TAG, "steps: " + mRecipesItem.getSteps().size());
         mStepsRecyclerView.setAdapter(new StepsAdapter(mRecipesItem.getSteps()));
     }
 
